@@ -81,16 +81,16 @@ chomp $mysql_cflags;
 $mysql_cflags=~s/'//g;
 
 WriteMakefile(
-    'AUTHOR'        => 'XAO Inc. http://xao.com/',
-    'ABSTRACT'      => 'Fast MySQL driver for the XAO::FS',
+    'AUTHOR'        => 'Andrew Maltsev, http://ejelta.com/xao/',
+    'ABSTRACT'      => 'Fast MySQL driver for XAO::FS',
     'NAME'          => 'XAO::DO::FS::Glue::MySQL',
     'DISTNAME'      => 'XAO-MySQL',
     'VERSION_FROM'	=> 'MySQL.pm',
     'PREREQ_PM'     => { 
         'Error'         => '0.15',
         'Test::Unit'    => '0.15',
-        'XAO::Base'     => '1.05',
-        'XAO::FS'       => '1.05',
+        'XAO::Base'     => '1.06',
+        'XAO::FS'       => '1.06',
     },
     INC             => $mysql_cflags,
     LIBS            => $mysql_libs,
