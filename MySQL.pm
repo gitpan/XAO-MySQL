@@ -29,7 +29,7 @@ use base XAO::Objects->load(objname => 'FS::Glue::MySQL_DBI'),
          'DynaLoader';
 
 use vars qw($VERSION);
-$VERSION='1.0';
+$VERSION='1.01';
 
 bootstrap XAO::DO::FS::Glue::MySQL $VERSION;
 
@@ -41,20 +41,20 @@ sub sql_connect ($%) {
 
     my $dsn=$args->{dsn} ||
         throw $self "sql_connect - no 'dsn' given";
-    $dsn=~m/^dbi:mysql:(database=)?(\w+)(;host=(.*?);?.*)?/i ||
+    $dsn=~m/^dbi:mysql:(database=)?(\w+)(;hostname=(.*?)(;|$))?/i ||
         throw $self "sql_connect - wrong DSN format ($dsn)";
     my $dbname=$2 . "\0";
-    my $hostname=$3 ? $4 . "\0" : undef;
-    my $user=$args->{user};
-    $user.="\0" if $user;
-    my $password=$args->{password};
-    $password.="\0" if $password;
+    my $hostname=$3 ? $4 : '';
+    $hostname.="\0";
+    my $user=defined($args->{user}) ? $args->{user} : '';
+    $user.="\0";
+    my $password=defined($args->{password}) ? $args->{password} : '';
+    $password.="\0";
 
     ##
     # Perl complains about passing undefs into the sub which is ok and
     # expected in this case.
     #
-    no warnings;
     my $db=sql_real_connect($hostname,$user,$password,$dbname) ||
         throw $self "sql_connect - can't connect to the database ($dsn)";
 
@@ -65,6 +65,7 @@ sub sql_connect ($%) {
 
 sub sql_do ($$;@) {
     my $rc;
+
     if(@_>2 && ref($_[2])) {
         $rc=sql_real_do(@_);
     }
